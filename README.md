@@ -7,7 +7,7 @@ PyTorch implementation for **category-agnostic** keypoint and viewpoint estimati
 
 > Xingyi Zhou, Arjun Karpur, Linjie Luo, Qixing Huang,     
 > **StarMap for Category-Agnostic Keypoint and Viewpoint Estimation**      
-> [arXiv:xxxx.xxxxx](https://arxiv.org/abs/xxxx.xxxxx)
+> [arXiv:1803.09331](https://arxiv.org/abs/1803.09331)
 
 Supplementary material with more qualitative results and higer resulution can be found [here](https://drive.google.com/file/d/1IEcHBdQ8u2HTKiNz88ItJWDRQUOJnf60/view?usp=sharing).
 
@@ -35,9 +35,9 @@ The results are shown with predicted canonical view (triangle), the predicted 3D
 
 
 ## Citation
-    @InProceedings{zhou2017starmap,
+    @InProceedings{zhou2018starmap,
     author = {Zhou, Xingyi and Karpur, Arjun and Luo, Linjie and Huang, Qixing},
     title = {StarMap for Category-Agnostic Keypoint and Viewpoint Estimation},
-    journal={arXiv preprint arXiv:xxxx.xxxxx},
-    year={2017}
+    journal={arXiv preprint arXiv:1803.09331},
+    year={2018}
     }
