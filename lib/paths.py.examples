@@ -1,0 +1,3 @@
+rootDir = '/home/zxy/Projects/CrossObjectKeypoint/'
+pascal3dDir = '/home/zxy/Datasets/Pascal3D/'
+ObjectNet3DPath = '/home/zxy/Datasets/ObjectNet3D/'
