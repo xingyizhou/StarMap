@@ -108,15 +108,16 @@ Optionally, setup the [ObjectNet3D](http://cvgl.stanford.edu/projects/objectnet3
 
   - Run the network to get the feature predictions (Our result [here](https://drive.google.com/file/d/18JQmie7_H-xuzymuzMqYgNPBxWSEekRy/view?usp=sharing)).
 
-  ~~~
+~~~
 cd STARMAP_ROOT/tools
 python main.py -expID Pascal3D -task starembdep -loadModel ../models/Pascal3D-cpu.pth -test
-  ~~~
+~~~
 
   - Align the predicted keypoints and the predicted features to solve viewpoint. 
-  ~~~
+  
+~~~
 python EvalViewPoint.py ../exp/Pascal3DTEST/preds.pth
-  ~~~
+~~~
 
   - The result should be:
 
@@ -129,10 +130,10 @@ python EvalViewPoint.py ../exp/Pascal3DTEST/preds.pth
 - Evaluate keypoint classification on Pascal3D+ (Table. 1 in the paper):
   - Run 
  
- ~~~
+~~~
  cd STARMAP_ROOT/tools
  python EvalPTPCK.py ../exp/Pascal3DTEST/preds.pth
- ~~~
+~~~
 
   - The result should be:
  
@@ -154,41 +155,41 @@ python EvalViewPointObjectNet3D.py ../exp/ObjectNet3DTEST/preds.pth
 
 - Training viewpoint estimation.
 
- ```
+~~~
 cd STARMAP_ROOT/tools
- ```
+~~~
 
   1. Train the **Starmap**: [log](https://drive.google.com/file/d/1XOl2rga4ngQf8-i3kTp7eiYiwKRL7kXK/view?usp=sharing), [model](https://drive.google.com/file/d/1bhS4RUG4NvK1flAGfjm1rLdYctG61KBS/view?usp=sharing)
 
- ```
+~~~
 python main.py -expID Pstar -task star
- ```
+~~~
 
   2. Train **Starmap** and **CanviewFeature**: [log](https://drive.google.com/file/d/1zVoSl2YFoeTMIneq47TrPfMvuo1rzOzu/view?usp=sharing), [model](https://drive.google.com/file/d/1aZnpAe0J93iqiViiJ4jD1a6-BUE0SCuA/view?usp=sharing)
 
- ```
+~~~
 python main.py -expID Pstaremb -task staremb -loadModel ../exp/Pstar/model_last.pth -dropLR 60
- ```
+~~~
 
   3. Train **Starmap**, **CanviewFeature**, and **DepthMap**: [log](https://drive.google.com/file/d/1oWt-CZJrT7QtDd9IPIVkRtDbgGDroWrY/view?usp=sharing), [model](https://drive.google.com/file/d/1bwCeC4F0OLFYceiaAuUGB6pU8OOZor1k/view?usp=sharing)
 
- ```
+~~~
 python main.py -expID Pstarembdep -task starembdep -loadModel ../exp/Pstaremb/model_last.pth -dropLR 60
- ```
+~~~
 
 - For training on ObjectNet3D dataset, add `-dataset ObjectNet3D` to the above commends (and of course, change the expID and loadModel path). And set `-ObjectNet3DTrainAll` to train on all objects (by default it leaves 20 categories for testing only). 
 
 - We also provide our implementation of the resnet baselines discussed in Table.2 following [Viewpoint and Keypoint](https://github.com/shubhtuls/ViewpointsAndKeypoints). 
 
   - Category agnostic:
-```
+~~~
  python main.py -expID cls -task cls -arch resnet18 -trainBatch 32 -LR 0.01 -dropLR 20
- ```
+~~~
 
   - Category specific:
- ```
+~~~
  python main.py -expID clsSpec -task cls -arch resnet18 -trainBatch 32 -LR 0.01 -dropLR 20 -specificView
- ```
+~~~
 - For more training options, see `lib/opts.py`
 
 
