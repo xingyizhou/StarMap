@@ -1,4 +1,9 @@
-import sys
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import _init_paths
+
 import torch
 from opts import opts
 import ref
@@ -11,11 +16,13 @@ from utils.horn87 import horn87
 
 def main():
   opt = opts().parse()
+  if opt.loadModel == '':
+    opt.loadModel = '../models/Pascal3D-cpu.pth'
   model = torch.load(opt.loadModel)
   img = cv2.imread(opt.demo)
   s = max(img.shape[0], img.shape[1]) * 1.0
   c = np.array([img.shape[1] / 2., img.shape[0] / 2.])
-  img = Crop(img, c, s, 0, ref.inputRes) / 256.
+  img = Crop(img, c, s, 0, ref.inputRes).astype(np.float32).transpose(2, 0, 1) / 256.
   input = torch.from_numpy(img.copy()).float()
   input = input.view(1, input.size(0), input.size(1), input.size(2))
   input_var = torch.autograd.Variable(input).float()
