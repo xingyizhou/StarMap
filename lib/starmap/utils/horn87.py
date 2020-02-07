@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 import numpy as np
 
 def horn87(pointsS, pointsT, weight = None):
@@ -24,7 +27,7 @@ def horn87(pointsS, pointsT, weight = None):
                 [2*(q[2]*q[1]+q[0]*q[3]), q[0]**2-q[1]**2+q[2]**2-q[3]**2, 2*(q[2]*q[3]-q[0]*q[1])], 
                 [2*(q[3]*q[1]-q[0]*q[2]), 2*(q[3]*q[2]+q[0]*q[1]), q[0]**2-q[1]**2-q[2]**2+q[3]**2]])
 
-  s = (pointsT * np.dot(R, pointsS)).sum() / (pointsS * pointsS).sum()
+  s = old_div((pointsT * np.dot(R, pointsS)).sum(), (pointsS * pointsS).sum())
   t = centerT - s * np.dot(R, centerS)
   return R.astype(np.float32), t.astype(np.float32), s
 

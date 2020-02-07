@@ -2,11 +2,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 import _init_paths
 import sys
 import numpy as np
 import cv2
-import ref
+from starmap import ref
 import torch
 from datasets.ObjectNet3D import ObjectNet3D
 from utils.debugger import Debugger
@@ -48,7 +49,7 @@ acc30 = {}
 acc10 = {}
 err = {}
 Acc10, Acc30 = 0, 0
-for k, v in ref.ObjectNet3DClassName.items():
+for k, v in list(ref.ObjectNet3DClassName.items()):
   acc10[v], acc30[v], num[v] = 0, 0, 0
   err[v] = []
 dataset = ObjectNet3D(opt, 'val')
@@ -116,7 +117,7 @@ for idx in range(n):
   Acc30 += 1 if err_ <= 30. else 0
   Acc10 += 1 if err_ <= 10. else 0
   bar.suffix = '[{0}/{1}]|Total: {total:} | ETA: {eta:} | Acc_10: {Acc10:.6f} | Acc_30: {Acc30:.6f}'.format(idx, n, total = bar.elapsed_td, eta = bar.eta_td, Acc10 = Acc10 / (idx + 1.), Acc30 = Acc30 / (idx + 1.)) 
-  bar.next()
+  next(bar)
   if DEBUG:
     debugger = Debugger()
     input, target, mask = dataset[index]
@@ -146,7 +147,7 @@ accAll30 = 0.
 numAll = 0.
 mid = {}
 err_all = []
-for k, v in ref.ObjectNet3DClassName.items():
+for k, v in list(ref.ObjectNet3DClassName.items()):
   accAll10 += acc10[v]
   accAll30 += acc30[v]
   numAll += num[v]

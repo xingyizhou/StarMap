@@ -1,5 +1,8 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import range
 import torchvision.models as models
-import ref
+from . import ref
 import torch
 import torch.nn as nn
 import os

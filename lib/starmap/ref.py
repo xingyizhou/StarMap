@@ -1,6 +1,7 @@
-import paths 
-from utils import pascal3d_meta
-from utils import objectnet3d_meta
+from __future__ import absolute_import
+from . import paths 
+from .utils import pascal3d_meta
+from .utils import objectnet3d_meta
 nJoints = 16
 
 outputRes = 64

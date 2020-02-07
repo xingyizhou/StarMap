@@ -2,11 +2,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 import _init_paths
 
 import torch
 from opts import opts
-import ref
+from starmap import ref
 from utils.debugger import Debugger
 import cv2
 import numpy as np

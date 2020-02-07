@@ -1,12 +1,14 @@
+from __future__ import absolute_import
+from builtins import range
 import torch
 import numpy as np
-from utils.utils import AverageMeter, Flip
-from utils.eval import AccViewCls
-from utils.hmParser import parseHeatmap
+from .utils.utils import AverageMeter, Flip
+from .utils.eval import AccViewCls
+from .utils.hmParser import parseHeatmap
 import cv2
-import ref
+from . import ref
 from progress.bar import Bar
-from utils.debugger import Debugger
+from .utils.debugger import Debugger
 
 def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
   if split == 'train':
@@ -67,7 +69,7 @@ def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
         preds.append(out)
  
     Bar.suffix = '{split:5} Epoch: [{0}][{1}/{2}]| Total: {total:} | ETA: {eta:} | Loss {loss.avg:.6f} | Acc {Acc.avg:.6f}'.format(epoch, i, nIters, total=bar.elapsed_td, eta=bar.eta_td, loss=Loss, Acc=Acc, split = split)
-    bar.next()
+    next(bar)
   bar.finish()
   return {'Loss': Loss.avg, 'Acc': Acc.avg}, preds
 

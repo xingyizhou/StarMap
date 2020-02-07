@@ -1,7 +1,9 @@
+from builtins import range
 from .layers.Residual import Residual
 import torch.nn as nn
 import math
-import ref
+
+from starmap import ref
 
 class Hourglass(nn.Module):
   def __init__(self, n, nModules, nFeats):
