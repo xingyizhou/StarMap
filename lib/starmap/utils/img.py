@@ -88,7 +88,67 @@ def Transform3D(pt, center, scale, rot, res, invert = False):
     t = np.linalg.inv(t)
   new_point = np.dot(t, pt_)[:3]
   return new_point
-  
+
+
+def rotmat_2D_from_angle(angle):
+  return np.array([[np.cos(angle), -np.sin(angle)],
+                   [np.sin(angle), np.cos(angle)]])
+
+
+def NewCrop(img, center, max_side, rot, desired_side, points=np.zeros((0,2)),
+            return_points=False):
+  """
+  Scale and Crop and fit the image into the desired_side x desired_side
+
+  old crop function is confusing.
+  """
+  # resize the image only if we have reduce the size by more than half
+  resized_img = cv2.resize(img,
+                            ((img.shape[1] * desired_side // max_side),
+                             (img.shape[0] * desired_side // max_side)))
+  resized_points = points * desired_side / max_side
+
+  # Cropping begins here
+  # The image rectangle clockwise
+  rect_resized = np.array([
+    [0, 0],
+    [resized_img.shape[1], 0],
+    [resized_img.shape[1], resized_img.shape[0]],
+    [0, resized_img.shape[0]],
+  ])
+  resized_max_side = max(resized_img.shape[:1])
+
+  # Project the rectangle from source image to target image
+  # TODO account for rotation
+  target_center = np.array([[desired_side, desired_side ]]) / 2
+  resized_img_center = rect_resized.mean(axis=-2, keepdims=True)
+  R = rotmat_2D_from_angle(rot)
+  rect_target = np.int64(np.round(
+      (R @ (rect_resized - resized_img_center).T).T
+      + target_center
+  ))
+  target_points = (R @ (resized_points - resized_img_center).T).T + target_center
+
+  # Find the range of the rectangle
+  mins_target = np.maximum(np.min(rect_target, axis=-2),
+                         [0, 0])
+  maxs_target = np.minimum(np.max(rect_target, axis=-2),
+                         [desired_side, desired_side])
+
+  new_img_shape = ((desired_side, desired_side, img.shape[2])
+                   if img.ndim > 2
+                   else (desired_side, desired_side))
+  new_img = np.zeros(new_img_shape, dtype=img.dtype)
+
+  # Copy the cropped region from original image to target image
+  new_img[mins_target[1]:maxs_target[1],
+          mins_target[0]:maxs_target[0],
+          ...] = resized_img[0:maxs_target[1]-mins_target[1],
+                             0:maxs_target[0]-mins_target[0], ...]
+  return ((new_img, target_points)
+          if return_points
+          else new_img)
+
 
 def Crop(img, center, scale, rot, res):
   ht, wd = img.shape[0], img.shape[1]
