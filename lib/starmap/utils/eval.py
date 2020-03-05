@@ -1,6 +1,10 @@
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 import numpy as np
-import ref
 from scipy.linalg import logm
+
+from .. import ref
 
 def getPreds(hm):
   assert len(hm.shape) == 4, 'Input must be a 4-D tensor'
@@ -10,7 +14,7 @@ def getPreds(hm):
   preds = np.zeros((hm.shape[0], hm.shape[1], 2))
   for i in range(hm.shape[0]):
     for j in range(hm.shape[1]):
-      preds[i, j, 0], preds[i, j, 1] = idx[i, j] % res, idx[i, j] / res
+      preds[i, j, 0], preds[i, j, 1] = idx[i, j] % res, old_div(idx[i, j], res)
   
   return preds
 
@@ -19,7 +23,7 @@ def calcDists(preds, gt, normalize):
   for i in range(preds.shape[0]):
     for j in range(preds.shape[1]):
       if gt[i, j, 0] > 0 and gt[i, j, 1] > 0:
-        dists[j][i] = ((gt[i][j] - preds[i][j]) ** 2).sum() ** 0.5 / normalize[i]
+        dists[j][i] = old_div(((gt[i][j] - preds[i][j]) ** 2).sum() ** 0.5, normalize[i])
       else:
         dists[j][i] = -1
   return dists
@@ -83,7 +87,7 @@ def angle2dcm(angle):
   azimuth = angle[0]
   elevation = angle[1]
   theta = angle[2]
-  return np.dot(RotMat('Z', theta), np.dot(RotMat('X', - (pi / 2 - elevation)), RotMat('Z', - azimuth)))
+  return np.dot(RotMat('Z', theta), np.dot(RotMat('X', - (old_div(pi, 2) - elevation)), RotMat('Z', - azimuth)))
 
 def AccViewCls(output, target, numBins, specificView): 
   #unified
@@ -92,13 +96,13 @@ def AccViewCls(output, target, numBins, specificView):
     acc = 0
     for t in range(target.shape[0]):
       idx = np.where(target[t] != numBins)
-      ps = idx[0][0] / 3 * 3
+      ps = old_div(idx[0][0], 3 * 3)
       _, pred = output[t].view(-1, numBins)[ps: ps + 3].topk(1, 1, True, True)
       pred = pred.view(3).float() * binSize / 180. * pi 
       gt = target[t][ps: ps + 3].float() * binSize / 180. * pi
       R_pred = angle2dcm(pred)
       R_gt = angle2dcm(gt)
-      err = ((logm(np.dot(np.transpose(R_pred), R_gt)) ** 2).sum()) ** 0.5 / sqrt2
+      err = old_div(((logm(np.dot(np.transpose(R_pred), R_gt)) ** 2).sum()) ** 0.5, sqrt2)
       acc += 1 if err < pi / 6. else 0
     return 1.0 * acc / target.shape[0]
   else:
@@ -109,7 +113,7 @@ def AccViewCls(output, target, numBins, specificView):
     for t in range(target.shape[0]):
       R_pred = angle2dcm(pred[t])
       R_gt = angle2dcm(target[t])
-      err = ((logm(np.dot(np.transpose(R_pred), R_gt)) ** 2).sum()) ** 0.5 / sqrt2
+      err = old_div(((logm(np.dot(np.transpose(R_pred), R_gt)) ** 2).sum()) ** 0.5, sqrt2)
       acc += 1 if err < pi / 6. else 0
     return 1.0 * acc / target.shape[0]
 

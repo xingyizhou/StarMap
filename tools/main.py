@@ -2,30 +2,33 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 import _init_paths
 
 import os
 import time
 import datetime
-from utils.logger import Logger
 import torch
 import torch.utils.data
-from opts import opts
-import ref
-from model import getModel, saveModel
+
+from starmap.utils.logger import Logger
+from starmap.opts import opts
+import starmap.ref
+from starmap.model import getModel, saveModel
+
 opt = opts().parse()
 
 if opt.task == 'cls':
-  from datasets.Pascal3DCls import Pascal3D as Dataset
+  from starmap.datasets.Pascal3DCls import Pascal3D as Dataset
   from trainCls import train, val
 else:
   if opt.dataset == 'Pascal3D':
-    from datasets.Pascal3D import Pascal3D as Dataset
+    from starmap.datasets.Pascal3D import Pascal3D as Dataset
   elif opt.dataset == 'ObjectNet3D':
-    from datasets.ObjectNet3D import ObjectNet3D as Dataset
+    from starmap.datasets.ObjectNet3D import ObjectNet3D as Dataset
   else:
-    raise(Exception('Dataset Not Exists!'))
-  from train import train, val
+    raise Exception
+  from starmap.train import train, val
 
 def main():
   now = datetime.datetime.now()
@@ -61,12 +64,12 @@ def main():
   for epoch in range(1, opt.nEpochs + 1):
     mark = epoch if opt.saveAllModels else 'last'
     log_dict_train, _ = train(epoch, opt, train_loader, model, criterion, optimizer)
-    for k, v in log_dict_train.items():
+    for k, v in list(log_dict_train.items()):
       logger.scalar_summary('train_{}'.format(k), v, epoch)
       logger.write('{} {:8f} | '.format(k, v))
     if epoch % opt.valIntervals == 0:
       log_dict_val, preds = val(epoch, opt, val_loader, model, criterion)
-      for k, v in log_dict_val.items():
+      for k, v in list(log_dict_val.items()):
         logger.scalar_summary('val_{}'.format(k), v, epoch)
         logger.write('{} {:8f} | '.format(k, v))
       saveModel(os.path.join(opt.saveDir, 'model_{}.checkpoint'.format(mark)), model) # optimizer

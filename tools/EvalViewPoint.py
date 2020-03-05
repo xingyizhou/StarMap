@@ -2,18 +2,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 import _init_paths
 import sys
 import numpy as np
 import cv2
-import ref
 import torch
-from datasets.Pascal3D import Pascal3D
-from utils.debugger import Debugger
-from utils.hmParser import parseHeatmap
-from utils.horn87 import RotMat, horn87
 from scipy.linalg import logm
 from progress.bar import Bar
+
+from starmap import ref
+from starmap.datasets.Pascal3D import Pascal3D
+from starmap.utils.debugger import Debugger
+from starmap.utils.hmParser import parseHeatmap
+from starmap.utils.horn87 import RotMat, horn87
 
 PI = np.arccos(-1)
 DEBUG = False
@@ -48,7 +50,7 @@ acc30 = {}
 acc10 = {}
 err = {}
 Acc10, Acc30 = 0, 0
-for k, v in ref.pascalClassName.items():
+for k, v in list(ref.pascalClassName.items()):
   acc10[v], acc30[v], num[v] = 0, 0, 0
   err[v] = []
 dataset = Pascal3D(opt, 'val')
@@ -146,7 +148,7 @@ accAll30 = 0.
 numAll = 0.
 mid = {}
 err_all = []
-for k, v in ref.pascalClassName.items():
+for k, v in list(ref.pascalClassName.items()):
   accAll10 += acc10[v]
   accAll30 += acc30[v]
   numAll += num[v]

@@ -1,6 +1,11 @@
+from __future__ import division
+from __future__ import print_function
+from builtins import chr
+from builtins import range
+from past.utils import old_div
 import torch.utils.data as data
 import numpy as np
-import ref
+from starmap import ref
 import torch
 from h5py import File
 import cv2
@@ -71,7 +76,7 @@ class ObjectNet3D(data.Dataset):
     img = self.LoadImage(index)
     pts2d, pts3d, emb, c, s = self.GetPartInfo(index)
     s = min(s, max(img.shape[0], img.shape[1])) * 1.0
-    pts3d[:, 2] += s / 2
+    pts3d[:, 2] += old_div(s, 2)
     
     r = 0
     if self.split == 'train':

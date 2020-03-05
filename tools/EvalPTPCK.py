@@ -2,11 +2,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 import _init_paths
 import sys
 import numpy as np
 import cv2
-import ref
+from starmap import ref
 import torch
 from datasets.Pascal3D import Pascal3D
 from utils.debugger import Debugger
@@ -27,7 +28,7 @@ avgModel = {}
 model_pts = {}
 pascalPointInfo = ref.pascalPointInfo
 maxNKeypoints = max([len(pascalPointInfo[v]) for v in pascalPointInfo])
-for k, cls in ref.pascalClassName.items():
+for k, cls in list(ref.pascalClassName.items()):
   model_path = MODEL_PATH + '{}.mat'.format(cls)
   models = sio.loadmat(model_path)[cls][0]
   model_pts[cls] = np.zeros((len(models), maxNKeypoints, 3))
@@ -57,7 +58,7 @@ acc = {}
 err = {}
 ptAccC = {}
 cntPt = {}
-for k, v in ref.pascalClassName.items():
+for k, v in list(ref.pascalClassName.items()):
   acc[v], num[v] = 0, 0
   err[v] = []
   ptAccC[v], cntPt[v] = 0, 0
@@ -106,7 +107,7 @@ accAll = 0.
 numAll = 0.
 mid = {}
 err_all = []
-for k, v in ref.pascalClassName.items():
+for k, v in list(ref.pascalClassName.items()):
   accAll += ptAccC[v]
   numAll += cntPt[v]
   ptAccC[v] /= cntPt[v]

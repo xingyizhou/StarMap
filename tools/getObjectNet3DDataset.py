@@ -12,7 +12,7 @@ import h5py
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
 from mpl_toolkits.mplot3d import Axes3D
-import ref
+from starmap import ref
 PI = np.arccos(-1)
 oo = 1
 DEBUG = False

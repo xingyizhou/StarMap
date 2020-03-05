@@ -1,12 +1,17 @@
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import range
+from past.utils import old_div
 import torch
 import numpy as np
-from utils.utils import AverageMeter, Flip
-from utils.eval import getPreds
-from utils.hmParser import parseHeatmap
+from .utils.utils import AverageMeter, Flip
+from .utils.eval import getPreds
+from .utils.hmParser import parseHeatmap
 import cv2
-import ref
+from . import ref
 from progress.bar import Bar
-from utils.debugger import Debugger
+from .utils.debugger import Debugger
 
 def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
   if split == 'train':
@@ -42,7 +47,7 @@ def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
       loss += criterion(output[k], target_var)
 
     LossStar.update(((target.float()[:, 0, :, :] - output[opt.nStack - 1].cpu().data.float()[:, 0, :, :]) ** 2).mean())
-    Loss.update(loss.data[0], input.size(0))
+    Loss.update(loss.data.item(), input.size(0))
 
     if split == 'train':
       optimizer.zero_grad()
@@ -63,10 +68,10 @@ def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
         out['map'] = output_pred
         preds.append(out)
  
-    Bar.suffix = '{split:5} Epoch: [{0}][{1}/{2}]| Total: {total:} | ETA: {eta:} | Loss {loss.avg:.6f} | LossStar {lossStar.avg:.6f}'.format(epoch, i, nIters, total=bar.elapsed_td, eta=bar.eta_td, loss=Loss, lossStar = LossStar, split = split)
+    bar.suffix = '{split:5} Epoch: [{0}][{1}/{2}]| Total: {total:} | ETA: {eta:} | Loss {loss.avg:.6f} | LossStar {lossStar.avg:.6f}'.format(epoch, i, nIters, total=bar.elapsed_td, eta=bar.eta_td, loss=Loss, lossStar = LossStar, split = split)
     bar.next()
  
-    if opt.DEBUG > 1 or (opt.DEBUG == 1 and i % (nIters / 200) == 0):
+    if opt.DEBUG > 1 or (opt.DEBUG == 1 and i % (old_div(nIters, 200)) == 0):
       for j in range(input.size(0)):
         debugger = Debugger()
         img = (input[j].numpy()[:3].transpose(1, 2, 0)*256).astype(np.uint8).copy()
@@ -88,16 +93,16 @@ def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
         if 'emb' in opt.task:
           gt, pred = [], []
           ps = parseHeatmap(target[j].numpy())
-          print('ps', ps)
+          print(('ps', ps))
           for k in range(len(ps[0])):
-            print('target', k, target[j, 1:4, ps[0][k], ps[1][k]].numpy())
+            print(('target', k, target[j, 1:4, ps[0][k], ps[1][k]].numpy()))
             x, y, z = ((target[j, 1:4, ps[0][k], ps[1][k]].numpy() + 0.5) * 255).astype(np.int32)
             gt.append(target[j, 1:4, ps[0][k], ps[1][k]].numpy())
             cv2.circle(imgMNS, (ps[1][k] * 4, ps[0][k] * 4), 6, (int(x), int(y), int(z)), -1)
             
           ps = parseHeatmap(output_pred[j])
           for k in range(len(ps[0])):
-            print('pred', k, output_pred[j, 1:4, ps[0][k], ps[1][k]])
+            print(('pred', k, output_pred[j, 1:4, ps[0][k], ps[1][k]]))
             x, y, z = ((output_pred[j, 1:4, ps[0][k], ps[1][k]] + 0.5) * 255).astype(np.int32)
             pred.append(output_pred[j, 1:4, ps[0][k], ps[1][k]])
             cv2.circle(imgMNS, (ps[1][k] * 4, ps[0][k] * 4), 4, (255, 255, 255), -1)

@@ -2,11 +2,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 import _init_paths
 import sys
 import numpy as np
 import cv2
-import ref
+from starmap import ref
 import torch
 from datasets.Pascal3D import Pascal3D
 from utils.debugger import Debugger
@@ -46,7 +47,7 @@ n = len(preds)
 num = {}
 acc = {}
 err = {}
-for k, v in ref.pascalClassName.items():
+for k, v in list(ref.pascalClassName.items()):
   acc[v], num[v] = 0, 0
   err[v] = []
   
@@ -94,7 +95,7 @@ accAll = 0.
 numAll = 0.
 mid = {}
 err_all = []
-for k, v in ref.pascalClassName.items():
+for k, v in list(ref.pascalClassName.items()):
   accAll += acc[v]
   numAll += num[v]
   acc[v] = 1.0 * acc[v] / num[v]

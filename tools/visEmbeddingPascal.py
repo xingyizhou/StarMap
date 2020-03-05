@@ -2,8 +2,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from builtins import zip
+from builtins import range
 import _init_paths
-import ref 
+from starmap import ref 
 import os
 import scipy.io as sio
 import cv2

@@ -1,4 +1,7 @@
 # Code referenced from https://gist.github.com/gyglim/1f8dfb1b5c82627ae3efcfbbadb9f514
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import os
 LOG = True
 try:
@@ -9,7 +12,7 @@ except:
 import numpy as np
 import scipy.misc 
 try:
-    from StringIO import StringIO  # Python 2.7
+    from io import StringIO  # Python 2.7
 except ImportError:
     from io import BytesIO         # Python 3.x
 

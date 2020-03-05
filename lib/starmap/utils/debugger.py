@@ -1,10 +1,13 @@
+from builtins import zip
+from builtins import range
+from builtins import object
 import numpy as np
 import cv2
-import ref
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
 from mpl_toolkits.mplot3d import Axes3D
 
+from .. import ref
 
 def show2D(img, points, c):
   points = ((points.reshape(ref.nJoints, -1))).astype(np.int32)
@@ -66,7 +69,7 @@ class Debugger(object):
       cv2.waitKey()
   
   def showAllImg(self, pause = False):
-    for i, v in self.imgs.items():
+    for i, v in list(self.imgs.items()):
       cv2.imshow('{}'.format(i), v)
     if pause:
       cv2.waitKey()
@@ -84,6 +87,6 @@ class Debugger(object):
     cv2.imwrite(path + '{}.png'.format(imgId), self.imgs[imgId])
     
   def saveAllImg(self, path = '../debug/'):
-    for i, v in self.imgs.items():
+    for i, v in list(self.imgs.items()):
       cv2.imwrite(path + '/{}.png'.format(i), v)
     

@@ -1,9 +1,15 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
+from builtins import object
 import argparse
 import os
 import sys
-import ref
 
-class opts():
+# FIXME: make starmap package and make these the children 
+from . import ref
+
+class opts(object):
   def __init__(self):
     self.parser = argparse.ArgumentParser()
     self.parser.add_argument('-expID', default = 'default', help = 'Experiment ID')
@@ -50,7 +56,7 @@ class opts():
       if opt.specificView:
         opt.numOutput *= len(ref.pascalClassId)
 
-    print('Output dim', opt.numOutput)
+    print(('Output dim', opt.numOutput))
     if opt.demo != '':
       opt.GPU = -1
       return opt
