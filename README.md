@@ -26,7 +26,7 @@ our representation can achieve state-of-the-art results in viewpoint estimation.
 
 
 ## Installation
-The code was tested with [Anaconda](https://www.anaconda.com/download) Python 2.7 and [PyTorch]((http://pytorch.org/)) v0.1.12. After install Anaconda and Pytorch:
+The code was tested with [Anaconda](https://www.anaconda.com/download) Python 2.7 and [PyTorch]((http://pytorch.org/)) v0.3. via wheel. (You may need to try different variants of this version; for e.g., _torch-0.3.0.post4-cp27-cp27m-linux_x86_64.whl_ works for ubuntu 20.04). After install Anaconda and Pytorch:
 
 1. Clone the repo:
 
@@ -50,6 +50,10 @@ conda install --channel https://conda.anaconda.org/auto progress
 pip install tensorflow
 ~~~
 
+4. Run
+```console
+$ mv STARMAP_ROOT/lib/paths.py.examples STARMAP_ROOT/lib/paths.py
+```
 
 ## Demo
 - Download our pre-trained [model](https://drive.google.com/file/d/1bwCeC4F0OLFYceiaAuUGB6pU8OOZor1k/view?usp=sharing) (trained on Pascal3D+ dataset, or alternatively [model](https://drive.google.com/file/d/1iDtcq_gQBuguTmzpENn6Vru7dr39Grv-/view?usp=sharing) trained on ObjectNet3D dataset) and move it to `STARMAP_ROOT/models`.
